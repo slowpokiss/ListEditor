@@ -1,48 +1,42 @@
-export default class popover {
-  constructor() {
-    //this.popButton //= document.querySelector(".btn");
-    // this.popButton.onclick = (ev) => {
-    //   ev.preventDefault();
-    //   if (this.checkState()) {
-    //     this.closeElem();
-    //   } else {
-    //     this.showElem();
-    //   }
-    // };
+export default class Popover {
+  constructor(form) {
+    this.form = form
+    this.popupInputName = this.form.querySelector(".popup-input-name");
+    this.popupInputValue = this.form.querySelector(".popup-input-value");
+    this._tooltips = [];
   }
 
-  showElem(text) {
-    const a = document.createElement("div");
-    a.classList.add("arrow");
-    a.insertAdjacentHTML(
-      "beforeend",
-      `<p>${text}</p>`
-    );
-    document.body.appendChild(a);
+  showElem(text, elemToPop) {
+    const tooltipElem = document.createElement("div");
+    tooltipElem.classList.add("arrow");
+    tooltipElem.textContent = text;
 
-    const popParams = this.popButton.getBoundingClientRect();
-    a.style.left =
+    const id = performance.now()
+    this._tooltips.push({
+      id,
+      element: tooltipElem
+    })
+
+    document.body.appendChild(tooltipElem);
+
+    const popParams = elemToPop.getBoundingClientRect();
+    console.log()
+    tooltipElem.style.left =
       popParams.left +
       popParams.width / 2 -
-      a.getBoundingClientRect().width / 2 +
+      tooltipElem.getBoundingClientRect().width / 2 +
       "px";
-    a.style.bottom =
-      popParams.height + a.getBoundingClientRect().height + 10 + "px";
+    tooltipElem.style.bottom =
+      popParams.height + tooltipElem.getBoundingClientRect().height + 40 + "px";
 
-    console.log(a.getBoundingClientRect());
-    console.log(this.popButton.getBoundingClientRect());
+    return id;
   }
 
-  closeElem() {
-    document.body.removeChild(this.arrow);
-  }
+  closeElem(id) {
+    const elemToDel = this._tooltips.find(el => el.id === id)
 
-  checkState() {
-    // this.arrow = document.body.querySelector(".arrow")
-    // if (document.body.contains(this.arrow)) {
-    //   return true;
-    // } else {
-    //   return false;
-    // }
+    elemToDel.element.remove()
+
+    this._tooltips = this._tooltips.filter(el => el.id !== id)
   }
 }

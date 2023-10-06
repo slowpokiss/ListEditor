@@ -1,9 +1,10 @@
+import Popover from "./popover";
 
-
-export default class addForm {
+export default class AddForm {
   constructor() {
     this.form = document.querySelector(".list-popup");
     this.addBtn = document.querySelector(".list-add");
+    this.popoverClass = new Popover(this.form)
 
     this.addBtn.addEventListener("click", () => {
       this.showForm();
@@ -19,37 +20,47 @@ export default class addForm {
       }
     }
 
+    this.actual = [];
     this.form.addEventListener("submit", (ev) => {
       ev.preventDefault();
-      // const inputName = this.form.querySelector(".popup-input-name");
-      // const inputValue = this.form.querySelector(".popup-input-value");
-      // this.add(inputName.value, Number(inputValue.value));
-      // this.clearForm();
-      // this.closeForm();
 
-      const elements = this.form.elements
-      Array.from(elements).some(el => {
+      this.actual.forEach(id => this.popoverClass.closeElem(id));
+      this.actual = [];
+      const elements = this.form.elements;
 
-        return Object.keys(ValidityState.prototype).some(key => {
-          if (!el.name) return;
-          if (key === 'valid') return ;
-          if (el.validity[key]) {
-          
-            console.log(this.formErrors[el.name][key])
-            //pop.showElem(this.form, this.formErrors[el.name][key])
-            return true;
-          }
-        });
-      });
+      if (![...elements].some(this.checkFormValidity())) {
+        const inputName = this.form.querySelector(".popup-input-name");
+        const inputValue = this.form.querySelector(".popup-input-value");
+        this.add(inputName.value, Number(inputValue.value));
+        this.clearForm();
+        this.closeForm();
+      }
     });
 
     this.form.querySelector(".popup-cancel").addEventListener("click", (ev) => {
       ev.preventDefault();
       this.clearForm();
+      if (this.popoverClass._tooltips[0]) {
+        this.popoverClass.closeElem(this.popoverClass._tooltips[0].id)
+        this.actual = [];
+      }
       this.closeForm();
     });
   }
 
+  checkFormValidity() {
+    return (el) => {
+      return Object.keys(ValidityState.prototype).some(key => {
+        if (!el.name) return;
+        if (key === 'valid') return;
+        if (el.validity[key]) {
+          this.actual.push(this.popoverClass.showElem(this.formErrors[el.name][key], el))
+          return true;
+        }
+      });
+    }
+  }
+  
   addInputFields(elName, elValue) {
     this.form.querySelector(".popup-input-name").value = elName;
     this.form.querySelector(".popup-input-value").value = elValue;
