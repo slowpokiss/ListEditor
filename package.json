@@ -1,9 +1,9 @@
 {
-  "name": "testing",
+  "name": "listeditor",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "repository": "git@github.com:slowpokiss/testing.git",
+  "repository": "git@github.com:slowpokiss/ListEditor.git",
   "author": "Michel <hltvexe@mail.ru>",
   "scripts": {
     "start": "webpack serve --config webpack.dev.js",
