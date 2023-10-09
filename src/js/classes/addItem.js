@@ -47,14 +47,20 @@ export default class addItem extends addForm {
     elem.item.querySelector(".action-edit").addEventListener("click", (ev) => {
       ev.preventDefault();
       this.edit(elem);
-      this.form.onsubmit = () => {
-        let newElem = this.itemFolder[this.itemFolder.length - 1];
-        newElem.id = elem.id;
-        this.itemFolder[elem.id] = newElem;
-        this.itemFolder.splice(this.itemFolder.length - 1, 1);
-        this.update();
+      this.form.onsubmit = (ev) => {
+        ev.preventDefault();
+        if (this.validForm) {
+          let newElem = this.itemFolder[this.itemFolder.length - 1];
+          newElem.id = elem.id;
+          this.itemFolder[elem.id] = newElem;
+          this.itemFolder.splice(this.itemFolder.length - 1, 1);
+          console.log(this.itemFolder)
+          this.update();
+        }
       };
+      console.log(this.itemFolder)
     });
+
     this.itemsParent.appendChild(elem.item);
   }
 

@@ -32,8 +32,11 @@ export default class AddForm {
         const inputName = this.form.querySelector(".popup-input-name");
         const inputValue = this.form.querySelector(".popup-input-value");
         this.add(inputName.value, Number(inputValue.value));
+        this.validForm = true;
         this.clearForm();
         this.closeForm();
+      } else {
+        this.validForm = false;
       }
     });
 

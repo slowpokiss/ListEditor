@@ -20,14 +20,14 @@ export default class Popover {
     document.body.appendChild(tooltipElem);
 
     const popParams = elemToPop.getBoundingClientRect();
-    console.log()
     tooltipElem.style.left =
       popParams.left +
       popParams.width / 2 -
       tooltipElem.getBoundingClientRect().width / 2 +
       "px";
-    tooltipElem.style.bottom =
-      popParams.height + tooltipElem.getBoundingClientRect().height + 40 + "px";
+      
+    tooltipElem.style.top =
+      popParams.top - tooltipElem.getBoundingClientRect().bottom + "px";
 
     return id;
   }
