@@ -1,6 +1,6 @@
 export default class Popover {
   constructor(form) {
-    this.form = form
+    this.form = form;
     this.popupInputName = this.form.querySelector(".popup-input-name");
     this.popupInputValue = this.form.querySelector(".popup-input-value");
     this._tooltips = [];
@@ -11,11 +11,11 @@ export default class Popover {
     tooltipElem.classList.add("arrow");
     tooltipElem.textContent = text;
 
-    const id = performance.now()
+    const id = performance.now();
     this._tooltips.push({
       id,
-      element: tooltipElem
-    })
+      element: tooltipElem,
+    });
 
     document.body.appendChild(tooltipElem);
 
@@ -25,7 +25,7 @@ export default class Popover {
       popParams.width / 2 -
       tooltipElem.getBoundingClientRect().width / 2 +
       "px";
-      
+
     tooltipElem.style.top =
       popParams.top - tooltipElem.getBoundingClientRect().bottom + "px";
 
@@ -33,10 +33,10 @@ export default class Popover {
   }
 
   closeElem(id) {
-    const elemToDel = this._tooltips.find(el => el.id === id)
+    const elemToDel = this._tooltips.find((el) => el.id === id);
 
-    elemToDel.element.remove()
+    elemToDel.element.remove();
 
-    this._tooltips = this._tooltips.filter(el => el.id !== id)
+    this._tooltips = this._tooltips.filter((el) => el.id !== id);
   }
 }

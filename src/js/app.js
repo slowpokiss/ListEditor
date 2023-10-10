@@ -1,6 +1,5 @@
 import addItem from "./classes/addItem";
 
-
 const b = new addItem();
 
 b.add("iPhone XR", 80000);

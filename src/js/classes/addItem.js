@@ -1,6 +1,5 @@
 import addForm from "./addForm";
 
-
 export default class addItem extends addForm {
   constructor() {
     super();
@@ -54,11 +53,11 @@ export default class addItem extends addForm {
           newElem.id = elem.id;
           this.itemFolder[elem.id] = newElem;
           this.itemFolder.splice(this.itemFolder.length - 1, 1);
-          console.log(this.itemFolder)
+          console.log(this.itemFolder);
           this.update();
         }
       };
-      console.log(this.itemFolder)
+      console.log(this.itemFolder);
     });
 
     this.itemsParent.appendChild(elem.item);
