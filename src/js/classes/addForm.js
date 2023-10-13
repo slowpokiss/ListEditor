@@ -5,11 +5,8 @@ export default class AddForm {
     this.form = document.querySelector(".list-popup");
     this.addBtn = document.querySelector(".list-add");
     this.popoverClass = new Popover(this.form);
-
-    this.addBtn.addEventListener("click", () => {
-      this.showForm();
-    });
-
+    this.itemsParent = document.querySelector(".items");
+    this.actual = [];  
     this.formErrors = {
       name: {
         valueMissing: "Введите название товара",
@@ -19,40 +16,46 @@ export default class AddForm {
         patternMismatch: "Введите число",
       },
     };
+  }
 
-    this.actual = [];
-    this.form.addEventListener("submit", (ev) => {
+  init() {
+    const addCallBack = (ev) => {
       ev.preventDefault();
-
       this.actual.forEach((id) => this.popoverClass.closeElem(id));
       this.actual = [];
-      const elements = this.form.elements;
-
-      if (![...elements].some(this.checkFormValidity())) {
+      if (this.checkFormValidity(this.form.elements)) {
         const inputName = this.form.querySelector(".popup-input-name");
         const inputValue = this.form.querySelector(".popup-input-value");
-        this.add(inputName.value, Number(inputValue.value));
-        this.validForm = true;
-        this.clearForm();
+        const elemToAdd = this.add(inputName.value, Number(inputValue.value));
+        this.itemsParent.appendChild(elemToAdd);
+
         this.closeForm();
-      } else {
-        this.validForm = false;
+        this.clearForm();
+        this.form.removeEventListener('submit', addCallBack);
       }
+    }
+
+    this.addBtn.addEventListener("click", () => {
+      this.showForm();
+      this.form.addEventListener("submit", addCallBack);
     });
 
     this.form.querySelector(".popup-cancel").addEventListener("click", (ev) => {
       ev.preventDefault();
-      this.clearForm();
-      if (this.popoverClass._tooltips[0]) {
-        this.popoverClass.closeElem(this.popoverClass._tooltips[0].id);
+      
+      this.form.onsubmit = null
+      if (this.popoverClass._tooltips.length > 0) {
+        this.popoverClass.closeElem(this.popoverClass._tooltips[0].id)
         this.actual = [];
       }
+      
+      this.clearForm();
       this.closeForm();
     });
   }
 
-  checkFormValidity() {
-    return (el) => {
+  checkFormValidity(elements) {
+    return ![...elements].some((el) => {
       return Object.keys(ValidityState.prototype).some((key) => {
         if (!el.name) return;
         if (key === "valid") return;
@@ -63,7 +66,7 @@ export default class AddForm {
           return true;
         }
       });
-    };
+    })
   }
 
   addInputFields(elName, elValue) {

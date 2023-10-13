@@ -3,8 +3,8 @@ import addForm from "./addForm";
 export default class addItem extends addForm {
   constructor() {
     super();
+    this.init();
     this.itemFolder = [];
-    this.itemsParent = document.querySelector(".items");
   }
 
   add(name, value) {
@@ -25,7 +25,24 @@ export default class addItem extends addForm {
 
     const itemObj = { item: maket, name, value, id: this.itemFolder.length };
     this.itemFolder.push(itemObj);
-    this.show(itemObj);
+
+    itemObj.item.querySelector(".action-delete").addEventListener("click", (ev) => {
+      ev.preventDefault();
+      this.updateId();
+      this.deleteItem(itemObj.item, itemObj.id);
+    });
+
+    itemObj.item.querySelector(".action-edit").addEventListener("click", (ev) => {
+      ev.preventDefault();
+      this.edit(itemObj, ev.target.closest('.item-card'));
+    });
+
+    return itemObj.item
+  }
+
+  initialAdd(name, value) {
+    const elem = this.add(name, value);
+    this.itemsParent.appendChild(elem);
   }
 
   deleteItem(elem, id) {
@@ -34,38 +51,32 @@ export default class addItem extends addForm {
     this.updateId();
   }
 
-  show(elem) {
-    elem.item
-      .querySelector(".action-delete")
-      .addEventListener("click", (ev) => {
-        ev.preventDefault();
-        this.updateId();
-        this.deleteItem(elem.item, elem.id);
-      });
-
-    elem.item.querySelector(".action-edit").addEventListener("click", (ev) => {
-      ev.preventDefault();
-      this.edit(elem);
-      this.form.onsubmit = (ev) => {
-        ev.preventDefault();
-        if (this.validForm) {
-          let newElem = this.itemFolder[this.itemFolder.length - 1];
-          newElem.id = elem.id;
-          this.itemFolder[elem.id] = newElem;
-          this.itemFolder.splice(this.itemFolder.length - 1, 1);
-          console.log(this.itemFolder);
-          this.update();
-        }
-      };
-      console.log(this.itemFolder);
-    });
-
-    this.itemsParent.appendChild(elem.item);
-  }
-
   edit(elem) {
+    this.clearForm();
     this.addInputFields(elem.name, elem.value);
     this.showForm();
+
+    this.editCallBack = (ev) => {
+      ev.preventDefault();
+      this.actual.forEach((id) => this.popoverClass.closeElem(id));
+      this.actual = [];
+      console.log(this.form.elements[0].value)
+      if (this.checkFormValidity(this.form.elements)) {
+        const inputName = this.form.querySelector(".popup-input-name").value;
+        const inputValue = this.form.querySelector(".popup-input-value").value;
+        elem.name = inputName;
+        elem.value = Number(inputValue);
+        elem.item.querySelector('.item-name').textContent = inputName;
+        elem.item.querySelector('.item-value').textContent = inputValue;
+
+        this.update();
+        this.clearForm();
+        this.closeForm();
+        this.form.removeEventListener('submit', this.editCallBack);
+      }
+    }
+
+    this.form.addEventListener("submit", this.editCallBack);
   }
 
   update() {
