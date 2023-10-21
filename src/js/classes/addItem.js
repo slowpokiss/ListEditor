@@ -26,18 +26,22 @@ export default class addItem extends addForm {
     const itemObj = { item: maket, name, value, id: this.itemFolder.length };
     this.itemFolder.push(itemObj);
 
-    itemObj.item.querySelector(".action-delete").addEventListener("click", (ev) => {
-      ev.preventDefault();
-      this.updateId();
-      this.deleteItem(itemObj.item, itemObj.id);
-    });
+    itemObj.item
+      .querySelector(".action-delete")
+      .addEventListener("click", (ev) => {
+        ev.preventDefault();
+        this.updateId();
+        this.deleteItem(itemObj.item, itemObj.id);
+      });
 
-    itemObj.item.querySelector(".action-edit").addEventListener("click", (ev) => {
-      ev.preventDefault();
-      this.edit(itemObj, ev.target.closest('.item-card'));
-    });
+    itemObj.item
+      .querySelector(".action-edit")
+      .addEventListener("click", (ev) => {
+        ev.preventDefault();
+        this.edit(itemObj, ev.target.closest(".item-card"));
+      });
 
-    return itemObj.item
+    return itemObj.item;
   }
 
   initialAdd(name, value) {
@@ -53,28 +57,28 @@ export default class addItem extends addForm {
 
   edit(elem) {
     this.clearForm();
-    this.addInputFields(elem.name, elem.value);
     this.showForm();
+    this.addInputFields(elem.name, elem.value);
 
     this.editCallBack = (ev) => {
       ev.preventDefault();
       this.actual.forEach((id) => this.popoverClass.closeElem(id));
       this.actual = [];
-      console.log(this.form.elements[0].value)
       if (this.checkFormValidity(this.form.elements)) {
         const inputName = this.form.querySelector(".popup-input-name").value;
         const inputValue = this.form.querySelector(".popup-input-value").value;
         elem.name = inputName;
         elem.value = Number(inputValue);
-        elem.item.querySelector('.item-name').textContent = inputName;
-        elem.item.querySelector('.item-value').textContent = inputValue;
+        elem.item.querySelector(".item-name").textContent = inputName;
+        elem.item.querySelector(".item-value").textContent = inputValue;
 
-        this.update();
         this.clearForm();
         this.closeForm();
-        this.form.removeEventListener('submit', this.editCallBack);
+        this.update();
+
+        this.form.removeEventListener("submit", this.editCallBack);
       }
-    }
+    };
 
     this.form.addEventListener("submit", this.editCallBack);
   }

@@ -6,7 +6,7 @@ export default class AddForm {
     this.addBtn = document.querySelector(".list-add");
     this.popoverClass = new Popover(this.form);
     this.itemsParent = document.querySelector(".items");
-    this.actual = [];  
+    this.actual = [];
     this.formErrors = {
       name: {
         valueMissing: "Введите название товара",
@@ -31,25 +31,26 @@ export default class AddForm {
 
         this.closeForm();
         this.clearForm();
-        this.form.removeEventListener('submit', addCallBack);
+        this.form.removeEventListener("submit", addCallBack);
       }
-    }
+    };
 
     this.addBtn.addEventListener("click", () => {
       this.showForm();
+      this.clearForm();
       this.form.addEventListener("submit", addCallBack);
     });
 
     this.form.querySelector(".popup-cancel").addEventListener("click", (ev) => {
       ev.preventDefault();
-      
-      this.form.onsubmit = null
+
+      this.form.removeEventListener("submit", addCallBack);
+      this.form.removeEventListener("submit", this.editCallBack);
+      this.clearForm();
       if (this.popoverClass._tooltips.length > 0) {
-        this.popoverClass.closeElem(this.popoverClass._tooltips[0].id)
+        this.popoverClass.closeElem(this.popoverClass._tooltips[0].id);
         this.actual = [];
       }
-      
-      this.clearForm();
       this.closeForm();
     });
   }
@@ -66,7 +67,7 @@ export default class AddForm {
           return true;
         }
       });
-    })
+    });
   }
 
   addInputFields(elName, elValue) {
@@ -89,5 +90,10 @@ export default class AddForm {
     const inputValue = this.form.querySelector(".popup-input-value");
     inputName.value = "";
     inputValue.value = "";
+    inputName.classList.remove("valid");
+    inputValue.classList.remove("valid");
+    inputName.classList.remove("invalid");
+    inputValue.classList.remove("invalid");
+    this.form.classList.remove("was-validated");
   }
 }
